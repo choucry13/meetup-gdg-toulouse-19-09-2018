@@ -34,6 +34,6 @@ export class NgxPhoneNumberService {
               } as CountryPhone;
             });
           }));
-      }), mergeAll());
+      }), mergeAll(), shareReplay());
   }
 }
