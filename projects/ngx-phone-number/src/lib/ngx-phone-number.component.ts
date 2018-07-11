@@ -6,24 +6,27 @@ import {filter, map, mergeAll, shareReplay, startWith, tap} from 'rxjs/operators
 @Component({
   selector: 'ngx-phone-number',
   template: `
+    <main>
         <div *ngIf="countryPhoneSelected">
             <label for="tel">Country phone selected: {{countryPhoneSelected.name}} with prefix : + {{countryPhoneSelected.prefix}}</label>
-            <input id="tel" type="tel" />
-            <button (click)="reset()" >back</button>
-            <br />
+            <input id="tel" type="tel"/>
+            <button (click)="reset()">back</button>
+            <br/>
         </div>
-      <input matInput type="tel"  placeholder="nom.." [matAutocomplete]="phoneAuto" *ngIf="countryPhoneSelected == null"/>
+        <input matInput type="tel" placeholder="nom.." [matAutocomplete]="phoneAuto" *ngIf="countryPhoneSelected == null"/>
         <mat-autocomplete #phoneAuto="matAutocomplete" (optionSelected)="showPrefix($event.option.value)">
-            <mat-option *ngFor="let phone of countryPhonesFiltered | async" [value]="phone">
-                <span><img [src]="phone.url"/></span>{{phone.name}}
+            <mat-option *ngFor="let phone of countryPhonesFiltered$ | async" [value]="phone">
+                <img [src]="phone.url"/><span>{{phone.name}}</span>
             </mat-option>
         </mat-autocomplete>
+    </main>
   `,
+  styleUrls: ['./ngx-phone-number.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class NgxPhoneNumberComponent implements OnInit {
-  countryPhones: Observable<CountryPhone[]>;
-  countryPhonesFiltered: Observable<CountryPhone[]>;
+  countryPhones$: Observable<CountryPhone[]>;
+  countryPhonesFiltered$: Observable<CountryPhone[]>;
 
   countryPhoneSelected: CountryPhone;
 
@@ -31,8 +34,10 @@ export class NgxPhoneNumberComponent implements OnInit {
   constructor(private service: NgxPhoneNumberService) { }
 
   ngOnInit() {
-    this.countryPhones = this.service.getAllCountryPhone();
-    this.countryPhonesFiltered = this.countryPhones;
+    this.countryPhones$ = this.service.getAllCountryPhone();
+    this.countryPhonesFiltered$ = this.countryPhones$;
+
+    this.countryPhonesFiltered$.subscribe((result) => console.log(result));
   }
 
   @HostListener('input', ['$event'])
@@ -42,9 +47,9 @@ export class NgxPhoneNumberComponent implements OnInit {
     } else {
       this._search = this._search + $event.data;
     }
-    this.countryPhonesFiltered = this.countryPhones;
-    this.countryPhonesFiltered = this.
-    countryPhones.pipe(map(cps => cps.filter(cp => cp.name.toLowerCase().indexOf(this._search.toLowerCase()) > -1)));
+    this.countryPhonesFiltered$ = this.countryPhones$;
+    this.countryPhonesFiltered$ = this.
+    countryPhones$.pipe(map(cps => cps.filter(cp => cp.name.toLowerCase().indexOf(this._search.toLowerCase()) > -1)));
   }
 
   showPrefix(cp: CountryPhone) {
@@ -53,7 +58,7 @@ export class NgxPhoneNumberComponent implements OnInit {
 
   reset() {
     this._search = '';
-    this.countryPhonesFiltered = this.countryPhones;
+    this.countryPhonesFiltered$ = this.countryPhones$;
     this.countryPhoneSelected = null;
   }
 }
