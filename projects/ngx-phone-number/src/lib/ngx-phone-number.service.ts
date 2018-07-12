@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Observable, zip} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {map} from 'rxjs/operators';
+import {map, shareReplay} from 'rxjs/operators';
 
 export interface CountryPhone {
   code: string;
@@ -38,6 +38,6 @@ export class NgxPhoneNumberService {
           url: `http://www.countryflags.io/${phone}/flat/32.png`
         } as CountryPhone;
       });
-    }));
+    }), shareReplay());
   }
 }

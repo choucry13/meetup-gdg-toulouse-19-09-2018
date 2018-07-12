@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import {NgxPhoneNumberModule} from '@ngx/phone-number';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import {NgxPhoneNumberModule} from '@ngx/phone-number';
   ],
   imports: [
     BrowserModule,
-    NgxPhoneNumberModule
+    NgxPhoneNumberModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

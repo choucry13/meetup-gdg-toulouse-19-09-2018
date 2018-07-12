@@ -17,7 +17,7 @@ import {filter, map, mergeAll, shareReplay, startWith, tap} from 'rxjs/operators
               <br/>
           </div>
           <mat-form-field *ngIf="countryPhoneSelected == null">
-              <input matInput type="tel" placeholder="write a country.." [matAutocomplete]="phoneAuto"/>
+              <input matInput type="tel" placeholder="select a country" [matAutocomplete]="phoneAuto"/>
           </mat-form-field>
           <mat-autocomplete #phoneAuto="matAutocomplete" (optionSelected)="showPrefix($event.option.value)">
               <mat-option *ngFor="let phone of countryPhonesFiltered$ | async" [value]="phone">
