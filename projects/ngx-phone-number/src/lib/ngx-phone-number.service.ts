@@ -3,6 +3,7 @@ import {Observable, zip} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {map, shareReplay} from 'rxjs/operators';
 
+
 export interface CountryPhone {
   code: string;
   name: string;
@@ -22,7 +23,7 @@ export class NgxPhoneNumberService {
 
   getAllCountryPhone(): Observable<CountryPhone[]> {
     // dinstinct all request we need
-    const countries$ = this.http.get('./names.json');
+    const countries$ = this.http.get<any>('./names.json');
     const phones$ = this.http.get<any>('./phones.json');
     // cs = countries
     // ps = phones

@@ -1,7 +1,7 @@
 import {Component, HostListener, OnInit, ViewEncapsulation} from '@angular/core';
 import {CountryPhone, NgxPhoneNumberService} from './ngx-phone-number.service';
-import {Observable} from 'rxjs';
-import {filter, map, mergeAll, shareReplay, startWith, tap} from 'rxjs/operators';
+import {fromEvent, interval, Observable} from 'rxjs';
+import {audit, map} from 'rxjs/operators';
 
 @Component({
   selector: 'ngx-phone-number',
@@ -43,9 +43,13 @@ export class NgxPhoneNumberComponent implements OnInit {
     this.countryPhonesFiltered$ = this.countryPhones$;
 
     this.countryPhonesFiltered$.subscribe((result) => console.log(result));
+
+    const input = fromEvent(document, 'input');
+
+    input.subscribe((event) => this.onChangeInput(event));
   }
 
-  @HostListener('input', ['$event'])
+
   onChangeInput($event: any) {
     if ($event.data == null) {
       this._search = this._search ? this._search.slice(0, this._search.length - 1) : '';
@@ -55,6 +59,7 @@ export class NgxPhoneNumberComponent implements OnInit {
     this.countryPhonesFiltered$ = this.countryPhones$;
     this.countryPhonesFiltered$ = this.
     countryPhones$.pipe(map(cps => cps.filter(cp => cp.name.toLowerCase().indexOf(this._search.toLowerCase()) > -1)));
+
   }
 
   showPrefix(cp: CountryPhone) {
